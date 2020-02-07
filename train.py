@@ -15,6 +15,13 @@ from training.Trainer        import *
 from training.DataContainer import *
 from training.DataProvider  import *
 from training.DataQueue     import *
+from neural_network.NeuralNetwork import *
+from neural_network.activation_fn import *
+from training.Trainer        import *
+from training.DataContainer import *
+from training.DataProvider  import *
+from training.DataQueue     import *
+
 
 #used for creating a "unique" id for a run (almost impossible to generate the same twice)
 def id_generator(size=8, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
@@ -24,6 +31,7 @@ logging.basicConfig(filename='train.log',level=logging.DEBUG)
 
 #define command line arguments
 parser = argparse.ArgumentParser(fromfile_prefix_chars='@')
+parser.add_argument("--config", type=str, default='config.txt',  help="config file path")
 parser.add_argument("--restart", type=str, default=None,  help="restart training from a specific folder")
 parser.add_argument("--num_features", type=int,   help="dimensionality of feature vectors")
 parser.add_argument("--num_basis", type=int,   help="number of radial basis functions")
@@ -62,9 +70,11 @@ parser.add_argument('--save_interval', type=int, help="save progress every N ste
 parser.add_argument('--record_run_metadata', type=int, help="records metadata like memory consumption etc.")
 
 #if no command line arguments are present, config file is parsed
-config_file='config.txt'
+config_file = sys.argv[0]
+
 if len(sys.argv) == 1:
     if os.path.isfile(config_file):
+        print(config_file)
         args = parser.parse_args(["@"+config_file])
     else:
         args = parser.parse_args(["--help"])
